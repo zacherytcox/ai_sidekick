@@ -1,0 +1,28 @@
+version: "3.9"
+networks:
+  services:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24
+volumes:
+  openwebui:
+    driver: local
+services:
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: openwebui
+    environment:
+      OLLAMA_BASE_URL: 'http://host.docker.internal:11434'
+      WEBUI_AUTH: False
+      WEBUI_NAME: "AI_Sidekick"
+      DEFAULT_MODELS: "llama3.1:latest"
+
+    volumes:
+      - openwebui:/app/backend/data
+    ports:
+     - 8080:8080
+    restart: unless-stopped
+    networks:
+      - services
