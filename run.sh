@@ -1,7 +1,16 @@
 #!/bin/bash
 
+# shellcheck disable=2162
+read -p "Enter a remote Ollama server? (exmple: http://ollama-server.com:11434, leave blank for localhost): " answer
+if [[ -n "$answer" ]]; then
+   ollama_host="$answer"
+else
+   ollama_host="http://localhost:11434"
+fi
+
 # Is ollama running?
-curl http://localhost:11434/api/version > /dev/null 2>&1
+# shellcheck disable=2086
+curl $ollama_host/api/version > /dev/null 2>&1
 # shellcheck disable=2181
 if [ $? -ne 0 ]; then
     echo "'Ollama' is not running... Please install (if needed at 'https://ollama.com/') and run Ollama!"
@@ -13,19 +22,23 @@ fi
     read -p "Do you want to configure Continue extention is VSCode? (yes/no) " answer
     if [[ "$answer" =~ ^[Yy][Ee][Ss]|[Yy]$ ]]; then
         echo "Downloading Ollama models..."
-        curl http://localhost:11434/api/pull -d '{
+        # shellcheck disable=2086
+        curl $ollama_host/api/pull -d '{
           "model": "llama3.1",
           "stream": false
         }'
-        curl http://localhost:11434/api/pull -d '{
+        # shellcheck disable=2086
+        curl $ollama_host/api/pull -d '{
           "model": "qwen2.5-coder:1.5b",
           "stream": false
         }'
-        curl http://localhost:11434/api/pull -d '{
+        # shellcheck disable=2086
+        curl $ollama_host/api/pull -d '{
           "model": "qwen2.5-coder:7b",
           "stream": false
         }'
-        curl http://localhost:11434/api/pull -d '{
+        # shellcheck disable=2086
+        curl $ollama_host/api/pull -d '{
           "model": "nomic-embed-text",
           "stream": false
         }'
@@ -38,11 +51,12 @@ fi
         read -p "Do you want push config file to local machine if it doesn't exist? (yes/no) " answer2
         if [[ "$answer2" =~ ^[Yy][Ee][Ss]|[Yy]$ ]]; then
             cp -c ./template_config.yaml ~/.continue/config.yaml
+            if [ "$ollama_host" != "http://localhost:11434" ]; then
+                # shellcheck disable=2094,2002
+                cat ~/.continue/config.yaml | sed -e "s,model,apiBase: \"$ollama_host\"\n    model,g" > ~/.continue/config.yaml
+            fi
             echo "https://docs.continue.dev/customize/deep-dives/autocomplete#setting-up-with-ollama-default"
         fi
-
-
-
     fi
 
 # If you want to expose to network
@@ -56,11 +70,13 @@ open http://localhost:8080
 # test ollama endpoint
 
 # get ollama version
-curl http://localhost:11434/api/version
+# shellcheck disable=2086
+curl $ollama_host/api/version
 
 # test ollama prompt to get compute utilization
-curl http://localhost:11434/api/generate -d '{
-  "model": "llama3.2",
+# shellcheck disable=2086
+curl $ollama_host/api/generate -d '{
+  "model": "llama3.1",
   "prompt": "Say hi",
   "stream": false
 }'

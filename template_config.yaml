@@ -1,26 +1,24 @@
-name: my-configuration
+name: ai_sidekick
 version: 0.0.1
 schema: v1
 models:
   - name: Llama 3.1 8B
     provider: ollama
+    apiBase: "http://server.lan:11434"
     model: llama3.1:latest
     roles:
       - chat
   - name: Qwen 2.5 Coder 7b
     provider: ollama
     model: qwen2.5-coder:7b
-    promptTemplates:
-      apply: |
-        Original: {{{original_code}}}
-        New: {{{new_code}}}
   - name: Qwen 1.5b Autocomplete Model
     provider: ollama
     model: qwen2.5-coder:1.5b
     roles:
       - autocomplete
-  - name: Nomic Embed Text
-    provider: ollama
-    model: nomic-embed-text
-    roles:
-      - embed
+context:
+  - provider: folder
+  - provider: code
+  - provider: diff
+  - provider: terminal
+  - provider: problems

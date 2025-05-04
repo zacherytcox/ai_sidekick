@@ -11,7 +11,7 @@ volumes:
     driver: local
 services:
   openwebui:
-    image: ghcr.io/open-webui/open-webui:main
+    image: ghcr.io/open-webui/open-webui:latest
     container_name: openwebui
     environment:
       OLLAMA_BASE_URL: 'http://host.docker.internal:11434'
