@@ -4,7 +4,6 @@ schema: v1
 models:
   - name: Llama 3.1 8B
     provider: ollama
-    apiBase: "http://server.lan:11434"
     model: llama3.1:latest
     roles:
       - chat
