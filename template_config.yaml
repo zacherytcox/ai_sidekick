@@ -7,14 +7,23 @@ models:
     model: llama3.1:latest
     roles:
       - chat
+    defaultCompletionOptions:
+      maxTokens: 32768
+      contextLength: 32768
   - name: Qwen 2.5 Coder 7b
     provider: ollama
     model: qwen2.5-coder:7b
+    defaultCompletionOptions:
+      maxTokens: 32768
+      contextLength: 32768
   - name: Qwen 1.5b Autocomplete Model
     provider: ollama
     model: qwen2.5-coder:1.5b
     roles:
       - autocomplete
+    defaultCompletionOptions:
+      maxTokens: 32768
+      contextLength: 32768
 context:
   - provider: folder
   - provider: code
